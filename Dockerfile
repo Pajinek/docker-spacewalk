@@ -1,5 +1,5 @@
 from fedora:24
-# author: pavel studenik
+# author: Pavel Studenik <pstudeni@redhat.com>
 
 RUN URL_SW=http://yum.spacewalkproject.org/nightly/Fedora/24/x86_64/ && \
 rpm -Uvh $URL_SW/$( curl --silent $URL_SW | grep spacewalk-repo-[0-9] |  grep -Po '(?<=href=")[^"]*' )

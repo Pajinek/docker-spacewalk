@@ -11,7 +11,7 @@ db-backend=postgresql
 db-name=spaceschema
 db-user=spaceuser
 db-password=spacepw
-db-host=spacewalk-postgresql
+db-host=spacewalk-postgresql.docker
 db-port=5432
 enable-tftp=Y
 
