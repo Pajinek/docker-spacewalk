@@ -1,6 +1,8 @@
-# docker-spacewalk
+# Spacewalk nightly
 
-## How to run
+Official documentation: https://fedorahosted.org/spacewalk/
+
+## How to run by Ansible
 
 The way how to install Spacewalk nightly that takes 3 minute.
 
