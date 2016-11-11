@@ -24,5 +24,3 @@ createlang pltclu $DB_NAME -h $DOCKER_POSTGRESQL -U postgres
 sed -i 's/\(^\s*wait_for_tomcat\)/#\1/g' /usr/bin/spacewalk-setup
 
 spacewalk-setup --external-postgresql --answer-file=/root/answer.txt --clear-db
-
-touch /root/spacewalk-installation-done
