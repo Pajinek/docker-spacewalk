@@ -6,7 +6,8 @@
     db_host: "spacewalk-postgresql.docker"
     db_pass: "root_pass"
     spacewalk_host: "spacewalk.docker" 
-
+   # docker_image: "spacewalk"
+    docker_image: "pajinek/docker-spacewalk"
   tasks:
     - name: Install docker on system
       shell: |
@@ -31,7 +32,6 @@
       shell:
         docker exec {{ db_host }} /bin/bash -c "apt update && apt install postgresql-pltcl-9.6 -y"
 
-
     - name: Copy files to remote systems to build image for Docker
       copy: src={{ item }} dest=/root/{{ item }}
       with_items:
@@ -41,6 +41,8 @@
         - bin
         - bin/docker-spacewalk-setup.sh
         - bin/docker-spacewalk-run.sh
+      tags:
+        - build
 
     - name: Prepare storage
       shell: |
@@ -49,7 +51,9 @@
 
     - name: Build Docker image with spacewalk
       command:
-        docker build -t spacewalk .
+        docker build -t {{ docker_image }} .
+      tags:
+        - build
 
     - name: Delete old instance of Spacewalk
       shell: |
@@ -57,7 +61,7 @@
 
     - name: Install spacewalk from nigthly build
       command:
-        docker run -d --name "{{ spacewalk_host }}" -h "{{ spacewalk_host }}" --link "{{ db_host }}:{{ db_host }}" -p 80:80 -p 443:443 -e POSTGRES_PASSWORD="{{ db_pass }}" -v /var/satellite/:/var/satellite/:Z spacewalk
+        docker run -d --name "{{ spacewalk_host }}" -h "{{ spacewalk_host }}" --link "{{ db_host }}:{{ db_host }}" -p 80:80 -p 443:443 -e POSTGRES_PASSWORD="{{ db_pass }}" -v /var/satellite/:/var/satellite/:Z {{ docker_image }}
 
     - name: Check if installation finished done
       shell: |

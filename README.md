@@ -2,6 +2,8 @@
 
 ## How to run
 
+The way how to install Spacewalk nightly that takes 3 minute.
+
 At first step you have to create file "config/hosts.ini" with list of hostname, where Spacewalk will be installed by Ansible.
 Installation is realized in Dockers and due to it needed have installed Docker service or you can run prepare script:
 
