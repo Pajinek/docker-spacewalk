@@ -1,7 +1,7 @@
 # Spacewalk nightly
 
-Official documentation: https://fedorahosted.org/spacewalk/
-Docker image: https://hub.docker.com/r/pajinek/docker-spacewalk/
+* Official documentation: https://fedorahosted.org/spacewalk/
+* Docker image: https://hub.docker.com/r/pajinek/docker-spacewalk/
 
 ## How to run by Ansible
 
