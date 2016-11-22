@@ -46,12 +46,17 @@
 
     - name: Prepare storage
       shell: |
-        chcon -Rt svirt_sandbox_file_t /var/satellite
-        restorecon -rv  /var/satellite
+        mkdir -p {{ item }}
+        chcon -Rt svirt_sandbox_file_t {{ item }}
+        restorecon -rv  {{ item }}
+      with_items:
+        - /var/satellite
+        - /var/www/html
 
     - name: Build Docker image with spacewalk
       command:
         docker build -t {{ docker_image }} .
+      when: docker_image == "spacewalk"
       tags:
         - build
 
@@ -61,7 +66,13 @@
 
     - name: Install spacewalk from nigthly build
       command:
-        docker run -d --name "{{ spacewalk_host }}" -h "{{ spacewalk_host }}" --link "{{ db_host }}:{{ db_host }}" -p 80:80 -p 443:443 -e POSTGRES_PASSWORD="{{ db_pass }}" -v /var/satellite/:/var/satellite/:Z {{ docker_image }}
+        docker run -d --name "{{ spacewalk_host }}" -h "{{ spacewalk_host }}" \
+             --link "{{ db_host }}:{{ db_host }}"  \
+             -p 80:80 -p 443:443 -p 69:69 -p 5222:5222 \
+             -e POSTGRES_PASSWORD="{{ db_pass }}" \
+             -v /var/satellite/:/var/satellite/:Z \
+             -v /var/www/html:/var/www/html:Z \
+             {{ docker_image }}
 
     - name: Check if installation finished done
       shell: |
