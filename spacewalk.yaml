@@ -16,6 +16,15 @@
       tags:
         - prepare
 
+    - name: Enable http and https in firewalld
+      shell: |
+        firewall-cmd --list-service | grep {{ item }} ||
+        ( firewall-cmd --add-service={{ item }} &&
+          firewall-cmd --add-service={{ item }} --permanent )
+      with_items:
+        - http
+        - https
+
     - name: Check if Docker runs
       shell:
         service docker status
@@ -60,19 +69,22 @@
       tags:
         - build
 
+    - name: Download spacewalk image from Docker hub
+      command:
+        docker pull {{ docker_image }}
+      when: docker_image == "pajinek/docker-spacewalk"
+
     - name: Delete old instance of Spacewalk
       shell: |
          ! docker inspect {{ spacewalk_host }} || docker rm -f {{ spacewalk_host }}
 
-    - name: Install spacewalk from nigthly build
-      command:
-        docker run -d --name "{{ spacewalk_host }}" -h "{{ spacewalk_host }}" \
-             --link "{{ db_host }}:{{ db_host }}"  \
-             -p 80:80 -p 443:443 -p 69:69 -p 5222:5222 \
-             -e POSTGRES_PASSWORD="{{ db_pass }}" \
-             -v /var/satellite/:/var/satellite/:Z \
-             -v /var/www/html:/var/www/html:Z \
-             {{ docker_image }}
+    - name: Install spacewalk from docker image
+      shell: |
+        docker run -d --name {{ spacewalk_host }} -h {{ spacewalk_host }} \
+               --link {{ db_host }}:{{ db_host }} -p 80:80 -p 443:443 -p 69:69 -p 5222:5222 \
+               -e POSTGRES_PASSWORD={{ db_pass }} \
+               -v /var/satellite/:/var/satellite/:Z \
+               {{ docker_image }}
 
     - name: Check if installation finished done
       shell: |
