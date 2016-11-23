@@ -18,7 +18,7 @@ ADD bin/docker-spacewalk-run.sh /root/docker-spacewalk-run.sh
 
 RUN chmod a+x /root/docker-spacewalk-{run,setup}.sh
 
-EXPOSE 80 443
+EXPOSE 80 443 5222 69
 
 CMD /root/docker-spacewalk-run.sh
 
