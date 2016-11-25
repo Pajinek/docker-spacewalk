@@ -16,6 +16,11 @@
       tags:
         - prepare
 
+    - name: Check service firewalld
+      command: systemctl status firewalld
+      register: firewalld
+      ignore_errors: True
+
     - name: Enable http and https in firewalld
       shell: |
         firewall-cmd --list-service | grep {{ item }} ||
@@ -24,6 +29,7 @@
       with_items:
         - http
         - https
+      when: firewalld.rc == 0
 
     - name: Check if Docker runs
       shell:
