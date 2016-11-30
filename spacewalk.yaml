@@ -95,5 +95,11 @@
           echo "."
         done
 
+    - name: Load first page
+      shell:
+        curl --silent https://$( hostname )/rhn/newlogin/CreateFirstUser.do --insecure -D /dev/stdout -o /dev/null
+      register: curl
+
+    - debug: var=curl.stdout_lines
 ...
 
