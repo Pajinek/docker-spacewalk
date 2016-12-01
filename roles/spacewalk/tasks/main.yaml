@@ -82,6 +82,7 @@
       watchdog=$(( $watchdog - 1 ))
       sleep 10 && [ $watchdog -eq 0 ] && break
     done
+    true
 
 - name: Check docker logs
   shell:
