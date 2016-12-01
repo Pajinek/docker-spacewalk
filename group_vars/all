@@ -1,0 +1,12 @@
+# Here are variables related to the standalone Spacewalk installation
+
+# all variables for spacewalk is in answer.txt
+
+db_host: "spacewalk-postgresql.docker"
+db_pass: "root_pass"
+spacewalk_host: "spacewalk.docker"
+docker_image: "pajinek/docker-spacewalk"
+
+# set if you build own image for Docker
+# docker_image: "spacewalk"
+

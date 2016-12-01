@@ -1,0 +1,17 @@
+---
+- name: Install Docker on system
+  shell: |
+    dnf install -y docker libselinux-python nmap
+  tags:
+    - prepare
+
+- name: Configure and start Docker on system
+  shell: |
+    vg=$( vgdisplay | grep 'VG Name' | head -n 1 | sed 's/^\s\+VG Name\s\+\(.*\)$/\1/' )
+    echo VG='$vg' >> /etc/sysconfig/docker-storage-setup
+    echo AUTO_EXTEND_POOL='true' >> /etc/sysconfig/docker-storage-setup
+    docker-storage-setup
+    systemctl restart docker
+  tags:
+    - prepare
+

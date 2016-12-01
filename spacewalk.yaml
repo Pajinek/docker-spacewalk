@@ -2,14 +2,9 @@
 - hosts: all
   remote_user: root
   ###gather_facts: no
-  vars:
-    db_host: "spacewalk-postgresql.docker"
-    db_pass: "root_pass"
-    spacewalk_host: "spacewalk.docker" 
-   # docker_image: "spacewalk"
-    docker_image: "pajinek/docker-spacewalk"
 
   roles:
+    - docker
     - spacewalk
 ...
 

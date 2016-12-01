@@ -1,20 +1,4 @@
 ---
-- name: Install Docker on system
-  shell: |
-    dnf install -y docker libselinux-python nmap
-  tags:
-    - prepare
-
-- name: Configure and start Docker on system
-  shell: |
-    vg=$( vgdisplay | grep 'VG Name' | head -n 1 | sed 's/^\s\+VG Name\s\+\(.*\)$/\1/' )
-    echo VG='$vg' >> /etc/sysconfig/docker-storage-setup
-    echo AUTO_EXTEND_POOL='true' >> /etc/sysconfig/docker-storage-setup
-    docker-storage-setup
-    systemctl restart docker
-  tags:
-    - prepare
-
 - name: Check service firewalld
   command: systemctl status firewalld
   register: firewalld
@@ -97,7 +81,6 @@
     while ! docker logs {{ spacewalk_host }} 2> /dev/null | grep "Installation complete"; do
       watchdog=$(( $watchdog - 1 ))
       sleep 10 && [[ $watchdog == 0 ]] && break
-      echo "."
     done
 
 - name: Check docker logs
@@ -116,11 +99,11 @@
   shell: |
     URL=https://$( hostname )/rhn/newlogin/CreateFirstUser.do
     curl --silent $URL --insecure -D /dev/stdout -o /dev/null
-    watchdog=10
-    while True; do
-        EC=$( curl -o /dev/null --silent --head --write-out '%{http_code}' "$URL" )
-        ([ $EC -eq "200" ] || [ $watchdog -q 0 ]) && break
-        sleep 2
+    watchdog=30
+    while true; do
+        EC=$( curl -o /dev/null --insecure --silent --head --write-out '%{http_code}' "$URL" )
+        ([ "$EC" -eq "200" ] || [ $watchdog -q 0 ]) && break
+        sleep 2 && watchdog=$(( $watchdog - 1 ))
     done
   register: curl
   tags:
