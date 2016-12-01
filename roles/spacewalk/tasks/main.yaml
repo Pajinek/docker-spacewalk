@@ -77,10 +77,10 @@
 
 - name: Check if installation finished done
   shell: |
-    watchdog=10
-    while ! docker logs {{ spacewalk_host }} 2> /dev/null | grep "Installation complete"; do
+    watchdog=30
+    while ! docker logs {{ spacewalk_host }} 2> /dev/null | grep "^Installation complete.$"; do
       watchdog=$(( $watchdog - 1 ))
-      sleep 10 && [[ $watchdog == 0 ]] && break
+      sleep 10 && [ $watchdog -eq 0 ] && break
     done
 
 - name: Check docker logs
@@ -102,8 +102,9 @@
     watchdog=30
     while true; do
         EC=$( curl -o /dev/null --insecure --silent --head --write-out '%{http_code}' "$URL" )
-        ([ "$EC" -eq "200" ] || [ $watchdog -q 0 ]) && break
-        sleep 2 && watchdog=$(( $watchdog - 1 ))
+        ([ "$EC" -eq 200 ] || [ $watchdog -eq 0 ]) && break
+        echo "http code: $EC"
+        sleep 3 && watchdog=$(( $watchdog - 1 ))
     done
   register: curl
   tags:
