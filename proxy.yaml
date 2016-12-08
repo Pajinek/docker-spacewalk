@@ -1,10 +1,10 @@
 ---
-- hosts: spacewalk
+- hosts: proxy
   remote_user: root
   ###gather_facts: no
 
   roles:
     - docker
-    - spacewalk
+    - proxy
 ...
 

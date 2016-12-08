@@ -1,0 +1,24 @@
+---
+
+- name: Prepare storages
+  shell: |
+    mkdir -p {{ item }}
+    chcon -Rt svirt_sandbox_file_t {{ item }}
+    restorecon -rv  {{ item }}
+  with_items:
+    - /var/spool/rhn-proxy/rhn
+    - /root/ssl-build
+
+- name: Install and configure proxy
+  shell: |
+    docker pull varhoo/spacewalk-proxy
+    docker run -p 80:80 -d -P \
+           -p 443:443 \
+           -p 5222:5222 \
+           -p 5269:5269 \
+           -p 5280:5280 \
+           -e RHN_SERVER={{ spacewalk_host }} \
+           -e RHN_PASS={{ spacewalk_pass }} \
+           -e RHN_USER={{ spacewalk_user }} \
+           -v /var/spool/rhn-proxy/rhn:/var/spool/rhn-proxy/rhn
+    varhoo/spacewalk-proxy

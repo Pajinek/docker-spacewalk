@@ -20,6 +20,16 @@
   tags:
     - always
 
+- name: Prepare storages
+  shell: |
+    mkdir -p {{ item }}
+    chcon -Rt svirt_sandbox_file_t {{ item }}
+    restorecon -rv  {{ item }}
+  with_items:
+    - /var/satellite
+    - /var/www/html
+    - /root/ssl-build
+
 ### Postgresql issue ###
 - name: Run postgresql in Docker
   shell: |
@@ -41,15 +51,6 @@
     - bin/docker-spacewalk-run.sh
   tags:
     - build
-
-- name: Prepare storage
-  shell: |
-    mkdir -p {{ item }}
-    chcon -Rt svirt_sandbox_file_t {{ item }}
-    restorecon -rv  {{ item }}
-  with_items:
-    - /var/satellite
-    - /var/www/html
 
 - name: Build Docker image with spacewalk
   command:
@@ -73,6 +74,7 @@
            --link {{ db_host }}:{{ db_host }} -p 80:80 -p 443:443 -p 69:69 -p 5222:5222 \
            -e POSTGRES_PASSWORD={{ db_pass }} \
            -v /var/satellite/:/var/satellite/:Z \
+           -v /root/ssl-build:/root/ssl-build:Z \
            {{ docker_image }}
 
 - name: Check if installation finished done
@@ -83,6 +85,18 @@
       sleep 10 && [ $watchdog -eq 0 ] && break
     done
     true
+
+- name: Backup ssl certs
+  shell:
+    zip ssl -r /root/ssl-build
+  tags:
+    - backup
+
+- fetch:
+    src: /root/ssl.zip
+    dest: ssl-build
+  tags:
+    - backup
 
 - name: Check docker logs
   shell:

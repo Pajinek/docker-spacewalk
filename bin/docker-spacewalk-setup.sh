@@ -25,5 +25,4 @@ sed -i 's/\(^\s*wait_for_tomcat\)/#\1/g' /usr/bin/spacewalk-setup
 
 spacewalk-setup --external-postgresql --answer-file=/root/answer.txt --clear-db
 
-mv /root/ssl-build /var/satellite/
-ln -s /var/satellite/ssl-build /root/ssl-build/
+
