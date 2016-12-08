@@ -9,16 +9,28 @@
     - /var/spool/rhn-proxy/rhn
     - /root/ssl-build
 
+- name: Copy SSL certifications {{ host }}
+  copy: src=ssl-build/{{host}}/root/{{ item }} dest=/root/{{ item }}
+  with_items:
+    - ssl.zip
+
+- name: Unzip SLL certs from {{ host }}
+  shell:
+    unzip ssl.zip
+  args:
+    chdir: "/root/"
+
 - name: Install and configure proxy
   shell: |
     docker pull varhoo/spacewalk-proxy
-    docker run -p 80:80 -d -P \
+    docker run -d -P \
+           -p 80:80 \
            -p 443:443 \
            -p 5222:5222 \
            -p 5269:5269 \
            -p 5280:5280 \
-           -e RHN_SERVER={{ spacewalk_host }} \
+           -e RHN_SERVER={{ host }} \
            -e RHN_PASS={{ spacewalk_pass }} \
            -e RHN_USER={{ spacewalk_user }} \
-           -v /var/spool/rhn-proxy/rhn:/var/spool/rhn-proxy/rhn
-    varhoo/spacewalk-proxy
+           -v /var/spool/rhn-proxy/rhn:/var/spool/rhn-proxy/rhn \
+        varhoo/spacewalk-proxy

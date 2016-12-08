@@ -8,7 +8,8 @@ RUN sed s/enabled=0/enabled=1/g /etc/yum.repos.d/spacewalk-nightly.repo -i && \
 
 ADD jpackage-generic.repo /etc/yum.repos.d/jpackage-generic.repo
 
-RUN dnf install -y spacewalk-setup-postgresql spacewalk-setup tomcat perl-DBD-Pg \
+RUN dnf update -y && \
+    dnf install -y spacewalk-setup-postgresql spacewalk-setup tomcat perl-DBD-Pg \
                    spacewalk-taskomatic spacewalk-common && \
     dnf clean all
 

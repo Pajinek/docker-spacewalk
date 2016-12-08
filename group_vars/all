@@ -4,9 +4,11 @@
 
 db_host: "spacewalk-postgresql.docker"
 db_pass: "root_pass"
+db_version: "9.5"
 spacewalk_host: "spacewalk.docker"
 spacewalk_user: "admin"
 spacewalk_pass: "passadmin"
+docker_name: "spacewalk.docker"
 docker_image: "pajinek/docker-spacewalk"
 
 # set if you build own image for Docker

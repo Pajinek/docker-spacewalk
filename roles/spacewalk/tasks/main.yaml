@@ -29,16 +29,20 @@
     - /var/satellite
     - /var/www/html
     - /root/ssl-build
+    - /var/lib/pgsql/data
 
 ### Postgresql issue ###
 - name: Run postgresql in Docker
   shell: |
     docker ps | grep "{{ db_host }}" ||
-    docker run -d --name "{{ db_host }}" -h "{{ db_host }}" -p 5432:5432 -e POSTGRES_PASSWORD="{{ db_pass }}" postgres:9.6
+    docker run -d --name "{{ db_host }}" -h "{{ db_host }}" -p 5432:5432 \
+        -e POSTGRES_PASSWORD="{{ db_pass }}" \
+        -v /var/lib/pgsql/data:/var/lib/pgsql/data \
+        postgres:{{ db_version }}
 
-- name: Install pctl 9.6 to postgresql
+- name: Install pctl {{ db_version }} to postgresql
   shell:
-    docker exec {{ db_host }} /bin/bash -c "apt update && apt install postgresql-pltcl-9.6 -y"
+    docker exec {{ db_host }} /bin/bash -c "apt update && apt install postgresql-pltcl-{{ db_version }} -y"
 
 - name: Copy files to remote systems to build image for Docker
   copy: src={{ item }} dest=/root/{{ item }}
@@ -91,6 +95,8 @@
     zip ssl -r /root/ssl-build
   tags:
     - backup
+  args:
+    chdir: "/root/"
 
 - fetch:
     src: /root/ssl.zip
