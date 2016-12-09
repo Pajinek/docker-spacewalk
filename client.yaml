@@ -1,0 +1,28 @@
+---
+- hosts: client 
+  remote_user: root
+  ###gather_facts: no
+
+  tasks:
+   - name: Set Spacewalk repository for {{ansible_distribution}} {{ansible_distribution_version}}
+     shell: |
+        URL_SW=http://yum.spacewalkproject.org/nightly-client/Fedora/{{ansible_distribution_version}}/x86_64/
+        rpm -Uvh $URL_SW/$( curl --silent $URL_SW | grep spacewalk-client-repo-[0-9] |  grep -Po '(?<=href=")[^"]*' )
+     when: ansible_distribution == "Fedora"
+
+   - name: Enable nightly build
+     shell:
+        sed s/enabled=0/enabled=1/g /etc/yum.repos.d/spacewalk-client-nightly.repo -i && \
+        sed s/enabled=1/enabled=0/g /etc/yum.repos.d/spacewalk-client.repo -i
+
+   - name: Install Spacewalk Client tools
+     command:
+        dnf install -y rhn-setup
+
+   - name: Register system to Spacewalk
+     shell: |
+        wget http://{{host}}/pub/RHN-ORG-TRUSTED-SSL-CERT -O /usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT
+        rhnreg_ks --username={{ spacewalk_user }} --password={{ spacewalk_pass }} --serverUrl=https://{{ host }}/XMLRPC --sslCACert=/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT  --force
+        
+...
+

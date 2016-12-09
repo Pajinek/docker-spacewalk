@@ -8,6 +8,7 @@
   with_items:
     - /var/spool/rhn-proxy/rhn
     - /root/ssl-build
+    - /var/spool/squid
 
 - name: Copy SSL certifications {{ host }}
   copy: src=ssl-build/{{host}}/root/{{ item }} dest=/root/{{ item }}
@@ -16,7 +17,7 @@
 
 - name: Unzip SLL certs from {{ host }}
   shell:
-    unzip ssl.zip
+    unzip -o ssl.zip
   args:
     chdir: "/root/"
 
@@ -32,5 +33,6 @@
            -e RHN_SERVER={{ host }} \
            -e RHN_PASS={{ spacewalk_pass }} \
            -e RHN_USER={{ spacewalk_user }} \
-           -v /var/spool/rhn-proxy/rhn:/var/spool/rhn-proxy/rhn \
+           -v /var/spool/rhn-proxy/rhn:/var/spool/rhn-proxy/rhn:Z \
+           -v /var/spool/squid:/var/spool/squid:Z \
         varhoo/spacewalk-proxy

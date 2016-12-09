@@ -92,7 +92,7 @@
 
 - name: Backup ssl certs
   shell:
-    zip ssl -r /root/ssl-build
+    zip ssl -r ssl-build
   tags:
     - backup
   args:
