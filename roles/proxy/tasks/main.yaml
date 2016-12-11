@@ -1,38 +1,38 @@
 ---
-
 - name: Prepare storages
   shell: |
     mkdir -p {{ item }}
     chcon -Rt svirt_sandbox_file_t {{ item }}
     restorecon -rv  {{ item }}
   with_items:
-    - /var/spool/rhn-proxy/rhn
+    - /var/spool/rhn-proxy
     - /root/ssl-build
     - /var/spool/squid
 
-- name: Copy SSL certifications {{ host }}
+- name: Get SSL certifications from {{ host }}
   copy: src=ssl-build/{{host}}/root/{{ item }} dest=/root/{{ item }}
   with_items:
     - ssl.zip
 
-- name: Unzip SLL certs from {{ host }}
+- name: Unzip SLL certs
   shell:
     unzip -o ssl.zip
   args:
     chdir: "/root/"
 
-- name: Install and configure proxy
-  shell: |
+- name: Download image from Dockerhub
+  command:
     docker pull varhoo/spacewalk-proxy
-    docker run -d -P \
-           -p 80:80 \
-           -p 443:443 \
+
+- name: Configure proxy and register it to {{ host }}
+  command:
+    docker run -d -p 80:80 -p 443:443 \
            -p 5222:5222 \
            -p 5269:5269 \
            -p 5280:5280 \
            -e RHN_SERVER={{ host }} \
            -e RHN_PASS={{ spacewalk_pass }} \
            -e RHN_USER={{ spacewalk_user }} \
-           -v /var/spool/rhn-proxy/rhn:/var/spool/rhn-proxy/rhn:Z \
+           -v /var/spool/rhn-proxy:/var/spool/rhn-proxy:Z \
            -v /var/spool/squid:/var/spool/squid:Z \
         varhoo/spacewalk-proxy

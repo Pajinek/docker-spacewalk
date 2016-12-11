@@ -7,7 +7,7 @@
    - name: Set Spacewalk repository for {{ansible_distribution}} {{ansible_distribution_version}}
      shell: |
         URL_SW=http://yum.spacewalkproject.org/nightly-client/Fedora/{{ansible_distribution_version}}/x86_64/
-        rpm -Uvh $URL_SW/$( curl --silent $URL_SW | grep spacewalk-client-repo-[0-9] |  grep -Po '(?<=href=")[^"]*' )
+        rpm -Uvh $URL_SW/$( curl --silent $URL_SW | grep spacewalk-client-repo-[0-9] |  grep -Po '(?<=href=")[^"]*' ) --force
      when: ansible_distribution == "Fedora"
 
    - name: Enable nightly build
