@@ -91,7 +91,8 @@
     true
 
 - name: Backup ssl certs
-  shell:
+  shell: |
+    rpm -q zip || yum install zip -y
     zip ssl -r ssl-build
   tags:
     - backup
