@@ -3,6 +3,10 @@
 * Official documentation: https://fedorahosted.org/spacewalk/
 * Docker image: https://hub.docker.com/r/pajinek/docker-spacewalk/
 
+## Travis test
+
+This docker image, can be runned on Travis CI for testing PR
+
 ## How to run by Ansible
 
 The way how to install Spacewalk nightly that takes 3 minute.
