@@ -1,0 +1,29 @@
+sudo: required
+dist: trusty
+addons:
+  hosts:
+    - travis-trusty
+language: python
+python: '2.7'
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq python-apt
+install:
+  - pip install ansible
+env:
+  - TAGS='site-common'
+  - TAGS='site-zookeeper'
+  - TAGS='deps-kafka'
+  - TAGS='ELK'
+  - TAGS='scrapy-services'
+  - TAGS='scrapy-cluster'
+  - TAGS='deps-storm'
+  - TAGS='deps-hadoop'
+  - TAGS='site-docker-engine'
+
+matrix:
+  fast_finish: true
+script:
+  - ansible-playbook -i testing site-infrastructure.yml --tags $TAGS --syntax-check
+  - ansible-playbook -i testing site-infrastructure.yml --tags $TAGS --connection=local --become
+  - ansible-playbook -i config/hosts.ini spacewalk.yaml
