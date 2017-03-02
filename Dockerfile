@@ -1,7 +1,7 @@
 from centos:6
 # author: Pavel Studenik <pstudeni@redhat.com>
 
-RUN URL_SW=http://yum.spacewalkproject.org/2.6/RHEL/6/x86_64/ && \
+RUN URL_SW=http://yum.spacewalkproject.org/2.5/RHEL/6/x86_64/ && \
 rpm -Uvh $URL_SW/$( curl --silent $URL_SW | grep spacewalk-repo-[0-9] |  grep -Po '(?<=href=")[^"]*' ) && \
 rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 
