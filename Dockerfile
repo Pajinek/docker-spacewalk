@@ -2,16 +2,15 @@ from centos:6
 # author: Pavel Studenik <pstudeni@redhat.com>
 
 RUN URL_SW=http://yum.spacewalkproject.org/nightly/RHEL/6/x86_64/ && \
-rpm -Uvh $URL_SW/$( curl --silent $URL_SW | grep spacewalk-repo-[0-9] |  grep -Po '(?<=href=")[^"]*' )
+rpm -Uvh $URL_SW/$( curl --silent $URL_SW | grep spacewalk-repo-[0-9] |  grep -Po '(?<=href=")[^"]*' ) && \
+rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 RUN sed s/enabled=0/enabled=1/g /etc/yum.repos.d/spacewalk-nightly.repo -i && \
     sed s/enabled=1/enabled=0/g /etc/yum.repos.d/spacewalk.repo -i
 
 ADD jpackage-generic.repo /etc/yum.repos.d/jpackage-generic.repo
 
-RUN rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-
 RUN yum update -y && \
-    yum install -y spacewalk-setup-postgresql spacewalk-setup tomcat perl-DBD-Pg \
+    yum install -y spacewalk-setup-postgresql spacewalk-postgresql tomcat \
                    spacewalk-taskomatic spacewalk-common && \
     yum clean all
 
