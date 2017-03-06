@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # run spacewalk in docker
 # docker run -it -p 5432:5432 -e POSTGRES_PASSWORD=redhat --name=spacewalk-postgresql postgres
