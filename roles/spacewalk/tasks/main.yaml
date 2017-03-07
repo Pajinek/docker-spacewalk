@@ -23,11 +23,10 @@
 - name: Prepare storages
   shell: |
     mkdir -p {{ item }}
-    chcon -Rt svirt_sandbox_file_t {{ item }}
     restorecon -rv  {{ item }}
+    chcon -Rt svirt_sandbox_file_t {{ item }}
   with_items:
     - /var/satellite
-    - /var/www/html
     - /root/ssl-build
     - /var/lib/pgsql/data
 
