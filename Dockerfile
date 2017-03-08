@@ -11,7 +11,7 @@ ADD jpackage-generic.repo /etc/yum.repos.d/jpackage-generic.repo
 
 RUN yum update -y && \
     yum install -y spacewalk-setup-postgresql spacewalk-postgresql tomcat \
-                   spacewalk-taskomatic spacewalk-common && \
+                   spacewalk-taskomatic spacewalk-common spacewalk-utils && \
     yum clean all
 
 ADD answer.txt /root/answer.txt
