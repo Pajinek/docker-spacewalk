@@ -10,8 +10,7 @@ CHECK_DONE="/root/spacewalk-installation-done"
 chown apache.apache -R /var/satellite
 
 # setup spacewalk
-[ -f $CHECK_DONE ] || \
-/root/docker-spacewalk-setup.sh && touch $CHECK_DONE
+[ -f $CHECK_DONE ] || /root/docker-spacewalk-setup.sh && touch $CHECK_DONE
 
 # start cobblerd
 /usr/bin/python -s /usr/bin/cobblerd

@@ -17,6 +17,7 @@ RUN yum update -y && \
 ADD answer.txt /root/answer.txt
 ADD bin/docker-spacewalk-setup.sh /root/docker-spacewalk-setup.sh
 ADD bin/docker-spacewalk-run.sh /root/docker-spacewalk-run.sh
+ADD bin/spacewalk-hostname-rename.sh /root/spacewalk-hostname-rename.sh
 
 RUN chmod a+x /root/docker-spacewalk-{run,setup}.sh
 

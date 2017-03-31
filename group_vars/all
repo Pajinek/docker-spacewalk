@@ -9,7 +9,7 @@ spacewalk_host: "spacewalk.docker"
 spacewalk_user: "admin"
 spacewalk_pass: "passadmin"
 docker_name: "spacewalk.docker"
-docker_image: "pajinek/docker-spacewalk"
+docker_image: "pajinek/docker-spacewalk:nightly"
 
 # set if you build own image for Docker
 # docker_image: "spacewalk"
