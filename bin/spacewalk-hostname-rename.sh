@@ -315,11 +315,11 @@ function re-generate_server_ssl_certificate {
 echo "[$(date)]: $0 $*" >> $LOG
 
 while [ $# -ge 1 ]; do
-    if [[ "$1" =~ $IPADDR_REGEX ]]; then
-        IP=$1
-        shift
-        continue
-    fi
+    #if [[ "$1" =~ $IPADDR_REGEX ]]; then
+    IP=$1
+    shift
+    continue
+    #fi
 
     case $1 in
             --help | -h)  echo_usage;;
