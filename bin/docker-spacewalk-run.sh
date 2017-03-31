@@ -7,8 +7,7 @@
 CHECK_DONE="/root/spacewalk-installation-done"
 
 # setup spacewalk
-[ -f $CHECK_DONE ] || \
-/root/docker-spacewalk-setup.sh && touch $CHECK_DONE
+[ -f $CHECK_DONE ] || /root/docker-spacewalk-setup.sh && touch $CHECK_DONE
 
 # start httpd
 httpd -k start

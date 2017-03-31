@@ -25,3 +25,5 @@ sed -i 's/\(^\s*wait_for_tomcat\)/#\1/g' /usr/bin/spacewalk-setup
 
 spacewalk-setup --external-postgresql --answer-file=/root/answer.txt --clear-db
 
+/root/spacewalk-hostname-rename.sh $HOST_HOSTNAME
+
