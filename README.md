@@ -1,4 +1,4 @@
-# Spacewalk nightly
+# Spacewalk
 
 * Official documentation: https://fedorahosted.org/spacewalk/
 * Docker image: https://hub.docker.com/r/pajinek/docker-spacewalk/
