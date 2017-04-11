@@ -10,7 +10,13 @@ CHECK_DONE="/root/spacewalk-installation-done"
 chown apache.apache -R /var/satellite
 
 # setup spacewalk
-[ -f $CHECK_DONE ] || /root/docker-spacewalk-setup.sh && touch $CHECK_DONE
+if [ ! -f $CHECK_DONE ]; then
+    if ! /root/docker-spacewalk-setup.sh; then
+        echo "Error: can't make connection to postgresql"
+        exit 1
+    fi
+    touch $CHECK_DONE
+fi
 
 # start cobblerd
 /usr/bin/python -s /usr/bin/cobblerd
