@@ -5,6 +5,7 @@
 
   roles:
     - docker
+    - postgresql
     - spacewalk
 ...
 

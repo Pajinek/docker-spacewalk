@@ -3,7 +3,7 @@
 
 ### set postgresql ###
 export PGPASSWORD="$POSTGRES_PASSWORD"
-export DOCKER_POSTGRESQL=spacewalk-postgresql.docker
+export DOCKER_POSTGRESQL=postgresql-host
 DB_USER=spaceuser
 DB_PASS=spacepw
 DB_NAME=spaceschema

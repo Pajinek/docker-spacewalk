@@ -28,22 +28,6 @@
   with_items:
     - /var/satellite
     - /root/ssl-build
-    - /var/lib/pgsql/data
-
-### Postgresql issue ###
-- name: Check postgresql database
-  shell: |
-    docker start "{{ db_host }}" || docker ps | grep "{{ db_host }}"
-  register: database
-  ignore_errors: True
-
-- name: Run postgresql in Docker
-  shell: |
-    docker run -d --name {{ db_host }} -h {{ db_host }} -p 5432:5432 \
-        -e POSTGRES_PASSWORD={{ db_pass }} \
-        -v /var/lib/pgsql/data:/var/lib/pgsql/data \
-        postgres:{{ db_version }}
-  when: database.rc != 0
 
 - name: Install pctl {{ db_version }} to postgresql
   shell:
@@ -80,7 +64,7 @@
 - name: Install spacewalk from docker image
   shell: |
     docker run -d --name {{ spacewalk_host }} -h $( hostname ) \
-           --link {{ db_host }}:{{ db_host }} -p 80:80 -p 443:443 -p 69:69 -p 5222:5222 \
+           --link {{ db_host }}:postgresql-host -p 80:80 -p 443:443 -p 69:69 -p 5222:5222 \
            -e POSTGRES_PASSWORD={{ db_pass }} \
            -e HOST_HOSTNAME=$( hostname ) \
            -v /var/satellite/:/var/satellite/:Z \
