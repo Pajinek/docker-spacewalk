@@ -16,7 +16,7 @@ Now you can run installation of Spacewalk following command:
 
 ```
 docker run -it --link spacewalk-postgresql.docker:postgresql-host \
-         -e POSTGRES_PASSWORD=password spacewalk
+         -e POSTGRES_PASSWORD=password pajinek/docker-spacewalk:nightly
 ```
 Available versions:
 
