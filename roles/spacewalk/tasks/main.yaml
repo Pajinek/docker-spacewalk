@@ -53,7 +53,6 @@
   copy: src={{ item }} dest=/root/{{ item }}
   with_items:
     - Dockerfile
-    - jpackage-generic.repo
     - answer.txt
     - bin
     - bin/docker-spacewalk-setup.sh
