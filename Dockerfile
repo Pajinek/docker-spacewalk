@@ -7,7 +7,7 @@ rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 RUN sed s/enabled=0/enabled=1/g /etc/yum.repos.d/spacewalk-nightly.repo -i && \
     sed s/enabled=1/enabled=0/g /etc/yum.repos.d/spacewalk.repo -i
 
-ADD copr-epel6-addons.repo /etc/yum.repos.d/copr-epel6-addons.repo
+ADD copr-java-packages.repo /etc/yum.repos.d/copr-java-packages.repo
 
 RUN yum update -y && \
     yum install -y spacewalk-setup-postgresql spacewalk-postgresql tomcat \
