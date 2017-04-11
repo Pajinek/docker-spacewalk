@@ -5,7 +5,7 @@
 
 ## How to run in Docker
 
-At first you need installed postgresql. Easy way it using docker for it. 
+At first you need installed postgresql. Easy way to use Docker image for creating database:
 
 ```
 docker run -d --name spacewalk-postgresql.docker -h spacewalk-postgresql.docker \
