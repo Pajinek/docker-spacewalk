@@ -10,8 +10,7 @@ RUN sed s/enabled=0/enabled=1/g /etc/yum.repos.d/spacewalk-nightly.repo -i && \
 ADD copr-java-packages.repo /etc/yum.repos.d/copr-java-packages.repo
 
 RUN yum update -y && \
-    yum install -y spacewalk-setup-postgresql spacewalk-postgresql tomcat \
-                   spacewalk-taskomatic spacewalk-common spacewalk-utils && \
+    yum install -y spacewalk-postgresql spacewalk-taskomatic spacewalk-common spacewalk-utils && \
     yum clean all
 
 ADD answer.txt /root/answer.txt

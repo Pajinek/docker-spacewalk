@@ -1,0 +1,9 @@
+[jpackage-generic]
+name=JPackage generic
+#baseurl=http://mirrors.dotsrc.org/pub/jpackage/5.0/generic/free/
+#baseurl=http://yum.spacewalkproject.org/jpackage/
+mirrorlist=http://www.jpackage.org/mirrorlist.php?dist=generic&type=free&release=5.0
+enabled=1
+gpgcheck=0
+#gpgkey=http://www.jpackage.org/jpackage.asc
+gpgkey=http://yum.spacewalkproject.org/jpackage/jpackage.asc
