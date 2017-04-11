@@ -3,6 +3,26 @@
 * Official documentation: https://fedorahosted.org/spacewalk/
 * Docker image: https://hub.docker.com/r/pajinek/docker-spacewalk/
 
+## How to run in Docker
+
+At first you need installed postgresql. Easy way it using docker for it. 
+
+```
+docker run -d --name spacewalk-postgresql.docker -h spacewalk-postgresql.docker \
+        -e POSTGRES_PASSWORD=password postgres:9.5
+```
+
+Now you can run installation of Spacewalk following command:
+
+```
+docker run -it --link spacewalk-postgresql.docker:postgresql-host \
+         -e POSTGRES_PASSWORD=password spacewalk
+```
+Available versions:
+
+ * Spacewalk Nightly - `spacewalk:nightly`
+ * Spacewalk 2.6 - `spacewalk:2.6` or `spacewalk:latest`
+
 ## How to run by Ansible
 
 The way how to install Spacewalk nightly that takes 3 minute.
