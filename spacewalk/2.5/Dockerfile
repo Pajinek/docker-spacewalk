@@ -5,7 +5,7 @@ RUN URL_SW=http://yum.spacewalkproject.org/2.5/RHEL/7/x86_64/ && \
     rpm -Uvh $URL_SW/$( curl --silent $URL_SW | grep spacewalk-repo-[0-9] |  grep -Po '(?<=href=")[^"]*' ) && \
     rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
-# RUN yum install yum-utils -y && yum-config-manager repo --enable epel-testing
+RUN yum install yum-utils -y && yum-config-manager repo --enable epel-testing
 
 ADD jpackage-generic.repo /etc/yum.repos.d/jpackage-generic.repo
 
