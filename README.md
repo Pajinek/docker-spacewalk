@@ -6,10 +6,14 @@
 ## How to run in Docker
 
 At first you need installed postgresql. Easy way to use Docker image for creating database:
+(PostreSQL has to have installed postgresql-pltcl)
 
 ```
 docker run -d --name spacewalk-postgresql.docker -h spacewalk-postgresql.docker \
-        -e POSTGRES_PASSWORD=password postgres:9.5
+        -e POSTGRES_PASSWORD=password postgres:9.4
+docker exec spacewalk-postgresql.docker /bin/bash -c \
+        "apt update && apt install postgresql-pltcl-9.4 -y"
+docker restart spacewalk-postgresql.docker
 ```
 
 Now you can run installation of Spacewalk following command:
@@ -20,8 +24,9 @@ docker run -it --link spacewalk-postgresql.docker:postgresql-host \
 ```
 Available versions:
 
- * Spacewalk Nightly - `spacewalk:nightly`
- * Spacewalk 2.6 - `spacewalk:2.6` or `spacewalk:latest`
+ * Spacewalk Nightly PostgreSQL - `spacewalk:nightly` or `spacewalk:latest`
+ * Spacewalk 2.6 PostgreSQL - `spacewalk:2.6`
+ * Spacewalk 2.5 PostgreSQL - `spacewalk:2.5`
 
 ## How to run by Ansible
 
