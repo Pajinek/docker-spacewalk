@@ -3,7 +3,7 @@
 # all variables for spacewalk is in answer.txt
 
 db_host: "spacewalk-postgresql.docker"
-db_pass: "root_pass"
+db_pass: "password"
 db_version: "9.5"
 spacewalk_host: "spacewalk.docker"
 spacewalk_user: "admin"
