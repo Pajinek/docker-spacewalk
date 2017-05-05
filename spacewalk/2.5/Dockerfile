@@ -10,7 +10,8 @@ RUN yum install yum-utils -y && yum-config-manager repo --enable epel-testing
 ADD jpackage-generic.repo /etc/yum.repos.d/jpackage-generic.repo
 
 RUN yum install -y spacewalk-postgresql perl-DBD-Pg \
-                   spacewalk-taskomatic spacewalk-common && \
+                   spacewalk-taskomatic spacewalk-common c3p0 && \
+    yum -y downgrade c3p0 && \
     yum clean all
 
 ADD answer.txt /root/answer.txt
