@@ -1,17 +1,19 @@
 ---
 - name: Install Docker on system
   shell: |
-    dnf install -y docker libselinux-python nmap
+    packages="libselinux-python nmap"
+    (rpm -q dnf && dnf install -y $packages) || yum install -y $packages
   tags:
     - prepare
 
+# docker have to be configured by manual
 - name: Configure and start Docker on system
   shell: |
-    vg=$( vgdisplay | grep 'VG Name' | head -n 1 | sed 's/^\s\+VG Name\s\+\(.*\)$/\1/' )
-    echo VG='$vg' >> /etc/sysconfig/docker-storage-setup
-    echo AUTO_EXTEND_POOL='true' >> /etc/sysconfig/docker-storage-setup
-    docker-storage-setup
-    systemctl restart docker
+    # vg=$( vgdisplay | grep 'VG Name' | head -n 1 | sed 's/^\s\+VG Name\s\+\(.*\)$/\1/' )
+    # echo VG='$vg' >> /etc/sysconfig/docker-storage-setup
+    # echo AUTO_EXTEND_POOL='true' >> /etc/sysconfig/docker-storage-setup
+    # docker-storage-setup
+    systemctl status docker
   tags:
     - prepare
 
