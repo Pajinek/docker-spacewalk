@@ -63,8 +63,8 @@
 
 - name: Install spacewalk from docker image
   shell: |
-    docker run -d --name {{ spacewalk_host }}
-           --link {{ db_host }}:postgresql-host
+    docker run -d --name {{ spacewalk_host }} \
+           --link {{ db_host }}:postgresql-host \
            -p 80:80 -p 443:443 -p 69:69 -p 5222:5222 \
            -e POSTGRES_PASSWORD={{ db_pass }} \
            -e HOST_HOSTNAME=$( hostname ) \
