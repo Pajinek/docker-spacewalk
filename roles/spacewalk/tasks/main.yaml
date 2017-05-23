@@ -55,7 +55,7 @@
 - name: Download spacewalk image from Docker hub
   command:
     docker pull {{ docker_image }}
-  when: docker_image == "pajinek/docker-spacewalk"
+  when: docker_image != "spacewalk"
 
 - name: Delete old instance of Spacewalk
   shell: |
