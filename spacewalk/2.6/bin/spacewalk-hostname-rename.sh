@@ -315,13 +315,13 @@ function re-generate_server_ssl_certificate {
 
 echo "[$(date)]: $0 $*" >> $LOG
 
-while [ $# -ge 1 ]; do
-    #if [[ "$1" =~ $IPADDR_REGEX ]]; then
-    IP=$1
-    shift
-    continue
-    #fi
+#if [[ "$1" =~ $IPADDR_REGEX ]]; then
+IP=$1
+shift
+continue
+#fi
 
+while [ $# -ge 1 ]; do
     case $1 in
             --help | -h)  echo_usage;;
 
@@ -359,7 +359,7 @@ echo "=============================================" | tee -a $LOG
 echo "hostname: $HOSTNAME" | tee -a $LOG
 echo "=============================================" | tee -a $LOG
 
-initial_system_hostname_check || bye
+# initial_system_hostname_check || bye
 
 
 echo -n "Testing DB connection ... " | tee -a $LOG
