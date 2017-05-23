@@ -35,10 +35,10 @@ sed -i 's/\(^\s*wait_for_tomcat\)/#\1/g' /usr/bin/spacewalk-setup
 sed '3i\echo "Docker workaround - skip restarting..." && exit 0\' -i /usr/sbin/spacewalk-service
 
 if schema | grep spacewalk-schema; then
-    spacewalk-setup --external-postgresql --answer-file=/root/answer.txt --upgrade --skip-services-restart --non-interactive
+    spacewalk-setup --external-postgresql --answer-file=/root/answer.txt --upgrade --non-interactive
     spacewalk-schema-upgrade
 else
-    spacewalk-setup --external-postgresql --answer-file=/root/answer.txt --clear-db --skip-services-restart --non-interactive
+    spacewalk-setup --external-postgresql --answer-file=/root/answer.txt --clear-db --non-interactive
 fi
 
 [ -z "$HOST_HOSTNAME" ] || /root/spacewalk-hostname-rename.sh $HOST_HOSTNAME
