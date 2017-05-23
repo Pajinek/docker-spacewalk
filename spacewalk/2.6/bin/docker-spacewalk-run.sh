@@ -9,7 +9,7 @@ CHECK_DONE="/root/spacewalk-installation-done"
 # setup spacewalk
 if [ ! -f $CHECK_DONE ]; then
     if ! /root/docker-spacewalk-setup.sh; then
-        echo "Error: can't make connection to postgresql"
+        echo "Error: can't setup spacewalk. Look at logs."
         exit 1
     fi
     touch $CHECK_DONE
