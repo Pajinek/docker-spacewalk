@@ -278,6 +278,7 @@ function re-generate_server_ssl_certificate {
         if [ ! -n "$SSL_KEY_PAIR_RPM" ]
         then
             echo_err "Wrong SSL information provided. Check $LOG for more information." | tee -a $LOG
+            tail $LOG
             bye
         fi
 
@@ -360,14 +361,6 @@ echo "=============================================" | tee -a $LOG
 
 initial_system_hostname_check || bye
 
-# stop services
-echo -n "Stopping spacewalk services ... " | tee -a $LOG
-/usr/sbin/spacewalk-service stop >> $LOG 2>&1
-if [ "$DB_SERVICE" != "" ]
-then
-    /sbin/service $DB_SERVICE start >> $LOG 2>&1
-fi
-print_status 0  # just simulate end
 
 echo -n "Testing DB connection ... " | tee -a $LOG
 # for spacewalk only:
@@ -445,13 +438,5 @@ else
        >> /dev/null 2>&1
 fi
 print_status $?
-
-echo -n "Starting spacewalk services ... " | tee -a $LOG
-if [ "$DB_SERVICE" != "" ]
-then
-    /sbin/service $DB_SERVICE stop >> $LOG 2>&1
-fi
-/usr/sbin/spacewalk-service start >> $LOG 2>&1
-print_status 0  # just simulate end
 
 echo "[$(date)]: $(basename $0) finished sucessfully." >> $LOG
