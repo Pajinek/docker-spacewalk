@@ -3,16 +3,15 @@ MAINTAINER Pavel Studenik <pstudeni@redhat.com>
 
 RUN URL_SW=http://yum.spacewalkproject.org/2.6/RHEL/7/x86_64/ && \
     rpm -Uvh $URL_SW/$( curl --silent $URL_SW | grep spacewalk-repo-[0-9] |  grep -Po '(?<=href=")[^"]*' ) && \
-    rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
+    sed '/enabled=1/a exclude=c3p0*' -i  /etc/yum.repos.d/epel*.repo
 
 RUN yum install yum-utils -y && yum-config-manager repo --enable epel-testing
 
 ADD jpackage-generic.repo /etc/yum.repos.d/jpackage-generic.repo
 
 RUN yum install -y spacewalk-postgresql \
-                   spacewalk-taskomatic spacewalk-common c3p0 && \
-    yum -y downgrade c3p0 && \
-    echo "exclude=c3p0" >> /etc/yum.conf && \
+                   spacewalk-taskomatic spacewalk-common && \
     yum clean all
 
 ADD answer.txt /root/answer.txt
