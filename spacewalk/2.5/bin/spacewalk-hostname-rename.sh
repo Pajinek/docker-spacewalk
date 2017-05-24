@@ -318,7 +318,6 @@ echo "[$(date)]: $0 $*" >> $LOG
 #if [[ "$1" =~ $IPADDR_REGEX ]]; then
 IP=$1
 shift
-continue
 #fi
 
 while [ $# -ge 1 ]; do
@@ -360,7 +359,6 @@ echo "hostname: $HOSTNAME" | tee -a $LOG
 echo "=============================================" | tee -a $LOG
 
 # initial_system_hostname_check || bye
-
 
 echo -n "Testing DB connection ... " | tee -a $LOG
 # for spacewalk only:
