@@ -13,13 +13,12 @@ function query() {
 }
 
 function schema {
-     spacewalk-sql -i <<EOF
-        select rhnPackageName.name || '-' || (PE.evr).version || '-' || (PE.evr).release
+    QUERY="select rhnPackageName.name || '-' || (PE.evr).version || '-' || (PE.evr).release
         from rhnVersionInfo, rhnPackageName, rhnPackageEVR PE
         where rhnVersionInfo.label = 'schema'
                 and rhnVersionInfo.name_id = rhnPackageName.id
-                and rhnVersionInfo.evr_id = PE.id;
-EOF
+                and rhnVersionInfo.evr_id = PE.id;"
+    PGPASSWORD=$DB_PASS psql -h $DOCKER_POSTGRESQL -U $DB_USER  $DB_NAME -w <<< "$QUERY"
 }
 
 query "select version()" || exit 1
@@ -34,7 +33,16 @@ createlang pltclu $DB_NAME -h $DOCKER_POSTGRESQL -U postgres
 sed -i 's/\(^\s*wait_for_tomcat\)/#\1/g' /usr/bin/spacewalk-setup
 sed '3i\echo "Docker workaround - skip restarting..." && exit 0\' -i /usr/sbin/spacewalk-service
 
+
 if schema | grep spacewalk-schema; then
+    # need filled database information
+    echo "db_backend = postgresql" >> /etc/rhn/rhn.conf
+    echo "db_user = $DB_USER" >> /etc/rhn/rhn.conf
+    echo "db_password = $DB_PASS" >> /etc/rhn/rhn.conf
+    echo "db_name = $DB_NAME" >> /etc/rhn/rhn.conf
+    echo "db_host = $DOCKER_POSTGRESQL" >>  /etc/rhn/rhn.conf
+    echo "db_port = 5432" >> /etc/rhn/rhn.conf
+
     spacewalk-setup --external-postgresql --answer-file=/root/answer.txt --skip-db-population --skip-services-restart --non-interactive
     spacewalk-schema-upgrade
 else
