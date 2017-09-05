@@ -61,13 +61,15 @@
   shell: |
      ! docker inspect {{ spacewalk_host }} || docker rm -f {{ spacewalk_host }}
 
-- name: Install spacewalk from docker image
+- name: Install spacewalk {{ db_type }} from docker image
   shell: |
     docker run -d --name {{ spacewalk_host }} \
            --link {{ db_host }}:postgresql-host \
            -p 80:80 -p 443:443 -p 69:69 -p 5222:5222 \
            -e POSTGRES_PASSWORD={{ db_pass }} \
+           -e ORACLE_PASSWORD={{ db_pass }} \
            -e HOST_HOSTNAME=$( hostname ) \
+           -e DB_TYPE={{ db_type }} \
            -v /var/satellite/:/var/satellite/:Z \
            -v /root/ssl-build:/root/ssl-build:Z \
            {{ docker_image }}
@@ -75,7 +77,7 @@
 - name: Check if installation finished done
   shell: |
     watchdog=30
-    while ! docker logs {{ spacewalk_host }} 2> /dev/null | grep "^Installation complete.$"; do
+    while ! docker logs {{ spacewalk_host }} 2> /dev/null | grep -e "^Installation complete.$" -e "^Java virtual machine used" ; do
       watchdog=$(( $watchdog - 1 ))
       sleep 10 && [ $watchdog -eq 0 ] && break
     done
@@ -111,11 +113,18 @@
 - name: Load first page
   shell: |
     URL=https://$( hostname )/rhn/newlogin/CreateFirstUser.do
+    URL_LOGIN=https://$( hostname )/rhn/Login.do
     curl --silent $URL --insecure -D /dev/stdout -o /dev/null
     watchdog=30
     while true; do
         EC=$( curl -o /dev/null --insecure --silent --head --write-out '%{http_code}' "$URL" )
-        ([ "$EC" -eq 200 ] || [ $watchdog -eq 0 ]) && break
+        ([ "$EC" == "200" ] || [ $watchdog -eq 0 ]) && break
+        # upgrade
+        if [ "$EC" == "403" ]; then
+            EC=$( curl -o /dev/null --insecure --silent --head --write-out '%{http_code}' "$URL_LOGIN" )
+            [ "$EC" -eq 200 ] && break
+            echo "http2 code: $EC"
+        fi
         echo "http code: $EC"
         sleep 3 && watchdog=$(( $watchdog - 1 ))
     done

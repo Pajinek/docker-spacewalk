@@ -4,6 +4,7 @@
 
 db_host: "spacewalk-postgresql.docker"
 db_pass: "password"
+db_type: "postgresql"
 db_version: "9.5"
 spacewalk_host: "spacewalk.docker"
 spacewalk_user: "admin"

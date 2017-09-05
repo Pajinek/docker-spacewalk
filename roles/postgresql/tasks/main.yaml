@@ -17,7 +17,7 @@
 ### Postgresql issue ###
 - name: Check postgresql database
   shell: |
-    docker start "{{ db_host }}" || docker ps | grep "{{ db_host }}"
+    docker ps | grep "{{ db_host }}" || docker start "{{ db_host }}"
   register: database
   ignore_errors: True
 

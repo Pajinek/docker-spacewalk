@@ -31,7 +31,7 @@ createlang pltclu $DB_NAME -h $DOCKER_POSTGRESQL -U postgres
 # echo "#!/bin/bash" > /usr/sbin/spacewalk-service
 # disable waiting for tomcat
 sed -i 's/\(^\s*wait_for_tomcat\)/#\1/g' /usr/bin/spacewalk-setup
-sed '3i\echo "Docker workaround - skip restarting..." && exit 0\' -i /usr/sbin/spacewalk-service
+sed -i '3i\echo "Docker workaround - skip restarting..." && exit 0\' /usr/sbin/spacewalk-service
 
 
 if schema | grep spacewalk-schema; then
