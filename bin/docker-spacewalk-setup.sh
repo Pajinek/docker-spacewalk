@@ -21,7 +21,7 @@ function is_db_install {
 sed -i 's/\(^\s*wait_for_tomcat\)/#\1/g' /usr/bin/spacewalk-setup
 sed -i '3i\echo "Docker workaround - skip restarting..." && exit 0\' /usr/sbin/spacewalk-service
 
-if ! spacewalk-cfg-get db_name; then
+if [ -z $(spacewalk-cfg-get db_name) ]; then
     # need filled database information
     echo "db_backend = postgresql" >> /etc/rhn/rhn.conf
     echo "db_user = $DB_USER" >> /etc/rhn/rhn.conf
