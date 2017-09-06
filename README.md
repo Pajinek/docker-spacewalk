@@ -24,7 +24,8 @@ docker run -it --link spacewalk-postgresql.docker:postgresql-host \
 ```
 Available versions:
 
- * Spacewalk Nightly PostgreSQL - `spacewalk:nightly` or `spacewalk:latest`
+ * Spacewalk Nightly PostgreSQL - `spacewalk:nightly`
+ * Spacewalk 2.7 PostgreSQL - `spacewalk:2.7`  or `spacewalk:latest`
  * Spacewalk 2.6 PostgreSQL - `spacewalk:2.6`
  * Spacewalk 2.5 PostgreSQL - `spacewalk:2.5`
 
@@ -55,11 +56,22 @@ Installation is realized in LXC container by Docker's images and due to it is ne
 ansible-playbook -i config/hosts.ini spacewalk.yaml -tags "prepare"
 ```
 
-If system is prepared, run this Ansible script that will install one instance Docker with postgresql and one with Spacewalk nightly.
+If system is prepared, run this Ansible script that will install one instance Docker with postgresql and one with Spacewalk latest version.
 
 ```
 ansible-playbook -i config/hosts.ini spacewalk.yaml
 ```
+
+If you want to install old version or nightly version, you can define image for installation following form
+
+```
+ansible-playbook -i config/hosts.ini spacewalk.yaml -e "docker_image=pajinek/docker-spacewalk:2.6"
+```
+
+```
+ansible-playbook -i config/hosts.ini spacewalk.yaml -e "docker_image=pajinek/docker-spacewalk:nightly"
+```
+
 
 After installation is completed, go to fill data for first login by webui.
 If you login to Spacewalk create needed channels and distribution mapping for your systems.
