@@ -1,2 +1,4 @@
 *.swp
 *.retry
+.idea/*
+config/hosts.ini

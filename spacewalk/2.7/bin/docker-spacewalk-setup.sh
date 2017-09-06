@@ -12,29 +12,16 @@ function query() {
     psql -h $DOCKER_POSTGRESQL -U postgres <<< "$1"
 }
 
-function schema {
-    QUERY="select rhnPackageName.name || '-' || (PE.evr).version || '-' || (PE.evr).release
-        from rhnVersionInfo, rhnPackageName, rhnPackageEVR PE
-        where rhnVersionInfo.label = 'schema'
-                and rhnVersionInfo.name_id = rhnPackageName.id
-                and rhnVersionInfo.evr_id = PE.id;"
-    PGPASSWORD=$DB_PASS psql -h $DOCKER_POSTGRESQL -U $DB_USER  $DB_NAME -w <<< "$QUERY"
+function is_db_install {
+    echo "select * from rhnVersionInfo;" | spacewalk-sql -i
 }
-
-query "select version()" || exit 1
-query "CREATE USER $DB_USER with password '$DB_PASS';"
-query "CREATE DATABASE $DB_NAME;"
-query "ALTER USER $DB_USER WITH SUPERUSER;"
-
-createlang pltclu $DB_NAME -h $DOCKER_POSTGRESQL -U postgres
 
 # echo "#!/bin/bash" > /usr/sbin/spacewalk-service
 # disable waiting for tomcat
 sed -i 's/\(^\s*wait_for_tomcat\)/#\1/g' /usr/bin/spacewalk-setup
 sed -i '3i\echo "Docker workaround - skip restarting..." && exit 0\' /usr/sbin/spacewalk-service
 
-
-if schema | grep spacewalk-schema; then
+if ! spacewalk-cfg-get db_name; then
     # need filled database information
     echo "db_backend = postgresql" >> /etc/rhn/rhn.conf
     echo "db_user = $DB_USER" >> /etc/rhn/rhn.conf
@@ -42,10 +29,19 @@ if schema | grep spacewalk-schema; then
     echo "db_name = $DB_NAME" >> /etc/rhn/rhn.conf
     echo "db_host = $DOCKER_POSTGRESQL" >>  /etc/rhn/rhn.conf
     echo "db_port = 5432" >> /etc/rhn/rhn.conf
+fi
 
+if is_db_install; then
     spacewalk-setup --external-postgresql --answer-file=/root/answer.txt --skip-db-population --skip-services-restart --non-interactive
     spacewalk-schema-upgrade
 else
+    # create db user
+    query "select version()" || exit 1
+    query "CREATE USER $DB_USER with password '$DB_PASS';"
+    query "CREATE DATABASE $DB_NAME;"
+    query "ALTER USER $DB_USER WITH SUPERUSER;"
+    createlang pltclu $DB_NAME -h $DOCKER_POSTGRESQL -U postgres
+
     spacewalk-setup --external-postgresql --answer-file=/root/answer.txt --clear-db --skip-services-restart --non-interactive
 fi
 
