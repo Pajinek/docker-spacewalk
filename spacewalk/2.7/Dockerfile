@@ -1,14 +1,13 @@
-FROM fedora:25
+FROM centos:7
 MAINTAINER Pavel Studenik <pstudeni@redhat.com>
 
-RUN URL_SW=http://yum.spacewalkproject.org/2.7/Fedora/25/x86_64/ && \
-    rpm -Uvh $URL_SW/$( curl --silent $URL_SW | grep spacewalk-repo-[0-9] |  grep -Po '(?<=href=")[^"]*' )
+RUN URL_SW=http://yum.spacewalkproject.org/2.7/RHEL/7/x86_64/ && \
+    rpm -Uvh $URL_SW/$( curl --silent $URL_SW | grep spacewalk-repo-[0-9] |  grep -Po '(?<=href=")[^"]*' ) && \
+    rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
+    sed '/enabled=/a exclude=c3p0*' -i  /etc/yum.repos.d/epel*.repo && \
+    yum install yum-utils -y && yum-config-manager repo --enable epel-testing
 
-# only for RHEL 7 - need RHEL 7.4
-#&& rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 
-#&& sed '/enabled=/a exclude=c3p0*' -i  /etc/yum.repos.d/epel*.repo
-#RUN yum install yum-utils -y && yum-config-manager repo --enable epel-testing
-#ADD copr-java-packages.repo /etc/yum.repos.d/copr-java-packages.repo
+ADD copr-java-packages.repo /etc/yum.repos.d/copr-java-packages.repo
 
 RUN yum install -y spacewalk-postgresql \
                    spacewalk-taskomatic spacewalk-common && \
