@@ -2,7 +2,7 @@
 
 - name: Check if Docker runs
   shell:
-    service docker status
+    systemctl status docker
   tags:
     - always
 
@@ -15,7 +15,7 @@
     - /var/lib/pgsql/data
 
 ### Postgresql issue ###
-- name: Check postgresql database
+- name: Check if postgresql database running
   shell: |
     docker ps | grep "{{ db_host }}" || docker start "{{ db_host }}"
   register: database

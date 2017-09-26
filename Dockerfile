@@ -1,7 +1,7 @@
 FROM centos:7
 MAINTAINER Pavel Studenik <pstudeni@redhat.com>
 
-RUN URL_SW=https://copr-be.cloud.fedoraproject.org/results/%40spacewalkproject/nightly/epel-7-x86_64/00599359-spacewalk-repo/ && \
+RUN URL_SW=https://copr-be.cloud.fedoraproject.org/results/@spacewalkproject/nightly/epel-7-x86_64/00607556-spacewalk-repo/ && \
 rpm -Uvh $URL_SW/$( curl --silent $URL_SW | grep spacewalk-repo-[0-9] | grep -Po '(?<=href=")[^"]*' | grep noarch ) && \
 rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 RUN sed s/enabled=0/enabled=1/g /etc/yum.repos.d/spacewalk-nightly.repo -i && \

@@ -1,13 +1,14 @@
 ---
-- name: Install Docker on system
-  shell: |
-    packages="libselinux-python nmap"
-    (rpm -q dnf && dnf install -y $packages) || yum install -y $packages
+- name: Install needed packages for installation
+  package: name={{ item }} state=latest
+  with_items:
+    - libselinux-python
+    - nmap
   tags:
     - prepare
 
 # docker have to be configured by manual
-- name: Configure and start Docker on system
+- name: Check if service Docker running
   shell: |
     # vg=$( vgdisplay | grep 'VG Name' | head -n 1 | sed 's/^\s\+VG Name\s\+\(.*\)$/\1/' )
     # echo VG='$vg' >> /etc/sysconfig/docker-storage-setup

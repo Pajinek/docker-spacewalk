@@ -14,12 +14,6 @@
     - https
   when: firewalld.rc == 0
 
-- name: Check if Docker runs
-  shell:
-    service docker status
-  tags:
-    - always
-
 - name: Prepare storages
   shell: |
     mkdir -p {{ item }}
@@ -72,7 +66,7 @@
            -e DB_TYPE={{ db_type }} \
            -v /var/satellite/:/var/satellite/:Z \
            -v /root/ssl-build:/root/ssl-build:Z \
-           {{ docker_image }}
+           {{ docker_image }}:{{ spacewalk_version }}
 
 - name: Check if installation finished done
   shell: |
