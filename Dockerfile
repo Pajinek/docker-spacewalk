@@ -5,12 +5,15 @@ ENV SW_REPO_RPM spacewalk-repo-2.8-7.el7.centos.noarch.rpm
 
 ADD copr-java-packages.repo /etc/yum.repos.d/copr-java-packages.repo
 
-RUN rpm -Uvh https://copr-be.cloud.fedoraproject.org/results/@spacewalkproject/nightly/epel-7-x86_64/00607556-spacewalk-repo/"$SW_REPO_RPM" && \
-    rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
+RUN yum install -y yum-plugin-copr && \
+    yum copr enable @spacewalkproject/nightly -y && yum install -y spacewalk-repo && \
+    yum copr disable @spacewalkproject/nightly -y && \
     sed s/enabled=0/enabled=1/g /etc/yum.repos.d/spacewalk-nightly.repo -i && \
     sed s/enabled=1/enabled=0/g /etc/yum.repos.d/spacewalk.repo -i && \
     yum update -y && \
+    rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
     yum install -y spacewalk-postgresql spacewalk-taskomatic spacewalk-common spacewalk-utils && \
+    yum remove -y yum-plugin-copr && \
     yum clean all
 
 ADD answer.txt /root/answer.txt
