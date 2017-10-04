@@ -1,8 +1,6 @@
 FROM centos:7
 MAINTAINER Pavel Studenik <pstudeni@redhat.com>
 
-ENV SW_REPO_RPM spacewalk-repo-2.8-7.el7.centos.noarch.rpm
-
 ADD copr-java-packages.repo /etc/yum.repos.d/copr-java-packages.repo
 
 RUN yum install -y yum-plugin-copr && \
@@ -18,11 +16,9 @@ RUN yum install -y yum-plugin-copr && \
     yum clean all
 
 ADD answer.txt /root/answer.txt
-ADD bin/docker-spacewalk-setup.sh /root/docker-spacewalk-setup.sh
-ADD bin/docker-spacewalk-run.sh /root/docker-spacewalk-run.sh
-ADD bin/spacewalk-hostname-rename.sh /root/spacewalk-hostname-rename.sh
+ADD bin/ /root/
 
-RUN chmod a+x /root/docker-spacewalk-{run,setup}.sh
+RUN chmod a+x /root/docker-spacewalk-{run,setup}.sh /root/spacewalk-hostname-rename.sh
 
 EXPOSE 69 80 443 5222
 
