@@ -31,8 +31,12 @@ if [ -z $(spacewalk-cfg-get db_name) ]; then
     echo "db_port = 5432" >> /etc/rhn/rhn.conf
 fi
 
+SSL_GEN=""
+[ -d /root/ssl-build/ ] && SSL_GEN="--skip-ssl-cert-generation"
+
+
 if is_db_install; then
-    spacewalk-setup --external-postgresql --answer-file=/root/answer.txt --skip-db-population --skip-services-restart --non-interactive
+    spacewalk-setup --external-postgresql --answer-file=/root/answer.txt --skip-db-population $SSL_GEN --skip-services-restart --non-interactive
     spacewalk-schema-upgrade
 else
     # create db user
