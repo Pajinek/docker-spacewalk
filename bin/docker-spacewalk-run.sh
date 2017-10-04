@@ -34,6 +34,7 @@ rhn-search start
 /usr/bin/s2s -c /etc/jabberd/s2s.xml &
 
 # start httpd
+[ -f /var/run/httpd/httpd.pid ] && rm /var/run/httpd/httpd.pid
 httpd -k start
 
 # start tomcat

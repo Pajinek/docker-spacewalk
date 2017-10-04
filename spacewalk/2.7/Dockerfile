@@ -9,7 +9,7 @@ RUN URL_SW=http://yum.spacewalkproject.org/2.7/RHEL/7/x86_64/ && \
 
 ADD copr-java-packages.repo /etc/yum.repos.d/copr-java-packages.repo
 
-RUN yum install -y spacewalk-postgresql \
+RUN yum install -y spacewalk-postgresql syslinux \
                    spacewalk-taskomatic spacewalk-common && \
     yum clean all
 

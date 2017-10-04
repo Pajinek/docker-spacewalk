@@ -12,7 +12,8 @@ RUN yum install -y yum-plugin-copr && \
     sed s/enabled=1/enabled=0/g /etc/yum.repos.d/spacewalk.repo -i && \
     yum update -y && \
     rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
-    yum install -y spacewalk-postgresql spacewalk-taskomatic spacewalk-common spacewalk-utils && \
+    yum install -y spacewalk-postgresql spacewalk-taskomatic spacewalk-common spacewalk-utils \
+                   syslinux && \
     yum remove -y yum-plugin-copr && \
     yum clean all
 
